@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2,5',
+      model: 'gemini-3.1-flash-lite',
       systemInstruction: `Kamu adalah Warpin AI, asisten keuangan warung kelontong berbasis syariah di Indonesia.
 Bantu pemilik warung memahami keuangan mereka dengan bahasa yang sangat sederhana dan ramah.
 Hindari istilah teknis akuntansi. Gunakan bahasa sehari-hari Bahasa Indonesia.

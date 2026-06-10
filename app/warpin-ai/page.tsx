@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
 import { IconArrowLeft, IconSend, IconRobot, IconUser } from '@tabler/icons-react'
 
 type Message = {
@@ -42,6 +42,7 @@ export default function WarpinAI() {
     setLoading(true)
 
     try {
+      // Instruksi sistem agar AI merespons dengan ringkas
       const promptInstruksi = "\n\n(Penting: Jawab pertanyaan di atas dengan sesingkat, sepadat, dan sejelas mungkin. Jangan bertele-tele. Berikan langsung ke intinya agar mudah dipahami oleh pedagang/pemilik warung.)"
 
       const response = await fetch('/api/warpin-ai', {
@@ -64,6 +65,7 @@ export default function WarpinAI() {
   return (
     <main className="min-h-screen bg-gray-100 flex flex-col">
 
+      {/* Menghilangkan scrollbar bawaan browser untuk class scrollbar-hide */}
       <style dangerouslySetInnerHTML={{__html: `
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
@@ -71,10 +73,9 @@ export default function WarpinAI() {
 
       {/* Header */}
       <div className="bg-gradient-to-r from-[#B8860B] to-[#D4A017] px-5 py-4 flex items-center gap-3">
-        {/* PERBAIKAN: Menggunakan Link dari next/link agar navigasi cepat tanpa reload */}
-        <Link href="/dashboard" className="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center">
+        <a href="/dashboard" className="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center">
           <IconArrowLeft size={20} color="white" />
-        </Link>
+        </a>
         <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
           <IconRobot size={22} color="white" />
         </div>
@@ -86,9 +87,8 @@ export default function WarpinAI() {
 
       {/* Chat Area */}
       <div className="flex-1 px-4 py-4 space-y-4 overflow-y-auto">
-        {/* PERBAIKAN: Mengganti key={index} dengan key string unik untuk memuaskan SonarCloud */}
         {messages.map((msg, index) => (
-          <div key={`msg-${index}-${msg.role}`} className={`flex items-end gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+          <div key={index} className={`flex items-end gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             {msg.role === 'assistant' && (
               <div className="w-8 h-8 bg-[#B8860B] rounded-full flex items-center justify-center flex-shrink-0 mb-1">
                 <IconRobot size={16} color="white" />
@@ -131,7 +131,7 @@ export default function WarpinAI() {
         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
           {suggestions.map((s) => (
             <button
-              key={s} // s sudah berupa string unik
+              key={s}
               onClick={() => handleSend(s)}
               className="flex-shrink-0 bg-white border border-gray-200 rounded-full px-3 py-1.5 text-xs text-gray-600 hover:border-[#B8860B] hover:text-[#B8860B] transition-colors"
             >

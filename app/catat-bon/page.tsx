@@ -30,7 +30,6 @@ export default function CatatBon() {
 
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      // PERBAIKAN 1: Menggunakan globalThis sebagai pengganti window
       if (!user) { globalThis.location.href = '/'; return }
 
       const { error: bonError } = await supabase
@@ -100,12 +99,10 @@ export default function CatatBon() {
 
           {/* Nama Pelanggan */}
           <div>
-            {/* PERBAIKAN 2: Menambahkan htmlFor dan id untuk Nama Pelanggan */}
-            <label htmlFor="customerName" className="block text-sm text-gray-500 mb-2">Nama Pelanggan</label>
+            <label className="block text-sm text-gray-500 mb-2">Nama Pelanggan</label>
             <div className="flex items-center bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 gap-3">
               <IconUser size={18} color="#aaa" />
               <input
-                id="customerName"
                 type="text"
                 placeholder="Contoh: Ibu Ani"
                 value={customerName}
@@ -117,12 +114,10 @@ export default function CatatBon() {
 
           {/* Nama Barang (opsional) */}
           <div>
-            {/* PERBAIKAN 3: Menambahkan htmlFor dan id untuk Nama Barang */}
-            <label htmlFor="itemName" className="block text-sm text-gray-500 mb-2">Nama Barang <span className="text-gray-400">(opsional)</span></label>
+            <label className="block text-sm text-gray-500 mb-2">Nama Barang <span className="text-gray-400">(opsional)</span></label>
             <div className="flex items-center bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 gap-3">
               <IconTag size={18} color="#aaa" />
               <input
-                id="itemName"
                 type="text"
                 placeholder="Contoh: Beras 5 kg"
                 value={itemName}
@@ -137,12 +132,10 @@ export default function CatatBon() {
             
             {/* KOLOM KIRI: HARGA SATUAN */}
             <div className="flex-1">
-              {/* PERBAIKAN 4: Menambahkan htmlFor dan id untuk Harga Satuan */}
-              <label htmlFor="amount" className="block text-sm text-gray-500 mb-2">Harga Satuan (Rp)</label>
+              <label className="block text-sm text-gray-500 mb-2">Harga Satuan (Rp)</label>
               <div className="h-12 flex items-center bg-gray-50 rounded-xl px-3 border border-gray-200 gap-2">
                 <IconCash size={16} color="#aaa" />
                 <input
-                  id="amount"
                   type="number"
                   placeholder="0"
                   value={amount}
@@ -154,21 +147,21 @@ export default function CatatBon() {
 
             {/* KOLOM KANAN: JUMLAH */}
             <div className="w-32">
-              {/* PERBAIKAN 5: Menambahkan htmlFor dan id untuk Jumlah */}
-              <label htmlFor="quantity" className="block text-sm text-gray-500 mb-2">Jumlah</label>
+              <label className="block text-sm text-gray-500 mb-2">Jumlah</label>
               <div className="h-12 flex items-center bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
                 <button
+                  type="button"
                   onClick={() => setQuantity((q: string) => String(Math.max(1, Number(q) - 1)))}
                   className="w-10 h-full text-gray-500 hover:bg-gray-100 text-lg font-bold flex items-center justify-center"
                 >−</button>
                 <input
-                  id="quantity"
                   type="number"
                   value={quantity}
                   onChange={(e) => setQuantity(e.target.value)}
                   className="flex-1 bg-transparent text-sm text-center focus:outline-none text-gray-700 w-full"
                 />
                 <button
+                  type="button"
                   onClick={() => setQuantity((q: string) => String(Number(q) + 1))}
                   className="w-10 h-full text-gray-500 hover:bg-gray-100 text-lg font-bold flex items-center justify-center"
                 >+</button>

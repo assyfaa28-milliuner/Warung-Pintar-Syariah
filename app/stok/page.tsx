@@ -35,7 +35,7 @@ export default function Stok() {
   async function fetchInventory() {
     setLoading(true)
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { window.location.href = '/'; return }
+    if (!user) { globalThis.location.href = '/'; return }
 
     const { data } = await supabase
       .from('inventory')
@@ -179,7 +179,7 @@ export default function Stok() {
                     <p className="text-xs text-gray-400 mt-0.5">Harga beli: Rp {item.hpp.toLocaleString('id-ID')}</p>
                   </div>
                   <div className="text-right">
-                    <p className={`text-base font-bold ${isTipis ? 'text-red-500' : 'text-[#1B4F3A]'}`}>
+                    <p className={`text-base font-bold ${isTipis ? 'text-red-500' : 'text-gray-700'}`}>
                       {item.quantity} pcs
                     </p>
                     {isTipis && (

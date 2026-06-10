@@ -19,6 +19,7 @@ export default function Register() {
   const [message, setMessage] = useState('')
 
   async function handleRegister() {
+    // Validasi input
     if (!ownerName || !warungName || !phoneNumber || !pin || !confirmPin) {
       setMessage('❌ Semua kolom wajib diisi!')
       return
@@ -36,6 +37,7 @@ export default function Register() {
     setMessage('')
 
     try {
+      // Daftar ke Supabase Auth pakai nomor HP sebagai email
       const fakeEmail = `${phoneNumber}@warpin.app`
       const { data, error } = await supabase.auth.signUp({
         email: fakeEmail,
@@ -47,6 +49,7 @@ export default function Register() {
         return
       }
 
+      // Simpan data profil warung
       const { error: profileError } = await supabase
         .from('warung_profiles')
         .insert({
@@ -89,7 +92,7 @@ export default function Register() {
           <div className="px-8 pb-10 pt-8 bg-white">
             <div className="space-y-4">
               <div>
-                <label htmlFor="ownerName" className="block text-sm text-gray-700 mb-2">Nama Pemilik</label>
+                <label className="block text-sm text-gray-700 mb-2">Nama Pemilik</label>
                 <div className="flex items-center gap-3 rounded-2xl border border-[#E5E2D8] bg-[#F8F7F2] px-4 py-3">
                   <div className="w-6 h-6 rounded-md flex items-center justify-center border border-[#E5E2D8] bg-white text-gray-600">
                     <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -98,7 +101,6 @@ export default function Register() {
                     </svg>
                   </div>
                   <input
-                    id="ownerName"
                     type="text"
                     placeholder="Contoh: Ibu Sari"
                     value={ownerName}
@@ -109,7 +111,7 @@ export default function Register() {
               </div>
 
               <div>
-                <label htmlFor="warungName" className="block text-sm text-gray-700 mb-2">Nama Warung</label>
+                <label className="block text-sm text-gray-700 mb-2">Nama Warung</label>
                 <div className="flex items-center gap-3 rounded-2xl border border-[#E5E2D8] bg-[#F8F7F2] px-4 py-3">
                   <div className="w-6 h-6 rounded-md flex items-center justify-center border border-[#E5E2D8] bg-white text-gray-600">
                     <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -119,7 +121,6 @@ export default function Register() {
                     </svg>
                   </div>
                   <input
-                    id="warungName"
                     type="text"
                     placeholder="Contoh: Warung Barokah"
                     value={warungName}
@@ -130,14 +131,13 @@ export default function Register() {
               </div>
 
               <div>
-                <label htmlFor="phoneNumber" className="block text-sm text-gray-700 mb-3">Nomor HP</label>
+                <label className="block text-sm text-gray-700 mb-3">Nomor HP</label>
                 <div className="flex items-center gap-3 rounded-[26px] border border-[#E8E3D7] bg-[#F6F4EB] px-4 py-4">
                   <svg viewBox="0 0 24 24" className="w-5 h-5 text-gray-600 flex-shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M16 3H8C6.9 3 6 3.9 6 5v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M12 17.5h.009" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   <input
-                    id="phoneNumber"
                     type="tel"
                     placeholder="08xxxxxxxxxx"
                     value={phoneNumber}
@@ -148,17 +148,14 @@ export default function Register() {
               </div>
 
               <div>
-                <label htmlFor="pinInput" className="block text-sm text-gray-700 mb-3">Buat PIN (6 digit)</label>
+                <label className="block text-sm text-gray-700 mb-3">Buat PIN (6 digit)</label>
                 <div
                   className="grid grid-cols-6 gap-2.5 mb-3 cursor-text"
                   onClick={() => pinRef.current?.focus()}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') pinRef.current?.focus() }}
                 >
-                  {[...new Array(6)].map((_, i) => (
+                  {[...Array(6)].map((_, i) => (
                     <div
-                      key={`pin1-${i}`}
+                      key={i}
                       className={`h-12 w-12 rounded-[16px] border ${pinFocused && i === pin.length ? 'border-[#1B4F3A]' : 'border-[#E8E3D7]'} bg-[#F6F4EB] flex items-center justify-center text-2xl font-semibold text-gray-700`}
                     >
                       {pin[i] ? '•' : pinFocused && i === pin.length ? <span className="block h-5 w-[2px] rounded bg-[#1B4F3A] animate-pulse" /> : ''}
@@ -166,7 +163,6 @@ export default function Register() {
                   ))}
                 </div>
                 <input
-                  id="pinInput"
                   ref={pinRef}
                   type="tel"
                   inputMode="numeric"
@@ -181,17 +177,14 @@ export default function Register() {
               </div>
 
               <div>
-                <label htmlFor="confirmPinInput" className="block text-sm text-gray-700 mb-3">Ulangi PIN</label>
+                <label className="block text-sm text-gray-700 mb-3">Ulangi PIN</label>
                 <div
                   className="grid grid-cols-6 gap-2.5 mb-3 cursor-text"
                   onClick={() => confirmPinRef.current?.focus()}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') confirmPinRef.current?.focus() }}
                 >
-                  {[...new Array(6)].map((_, i) => (
+                  {[...Array(6)].map((_, i) => (
                     <div
-                      key={`pin2-${i}`}
+                      key={i}
                       className={`h-12 w-12 rounded-[16px] border ${confirmFocused && i === confirmPin.length ? 'border-[#1B4F3A]' : 'border-[#E8E3D7]'} bg-[#F6F4EB] flex items-center justify-center text-2xl font-semibold text-gray-700`}
                     >
                       {confirmPin[i] ? '•' : confirmFocused && i === confirmPin.length ? <span className="block h-5 w-[2px] rounded bg-[#1B4F3A] animate-pulse" /> : ''}
@@ -199,7 +192,6 @@ export default function Register() {
                   ))}
                 </div>
                 <input
-                  id="confirmPinInput"
                   ref={confirmPinRef}
                   type="tel"
                   inputMode="numeric"

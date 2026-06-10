@@ -62,8 +62,7 @@ export default function CatatJual() {
       }
 
       setMessage('✅ Penjualan berhasil dicatat!')
-      // PERBAIKAN 1: Menggunakan globalThis sebagai pengganti window sesuai standar SonarCloud
-      setTimeout(() => { globalThis.location.href = '/dashboard' }, 1500)
+      setTimeout(() => { window.location.href = '/dashboard' }, 1500)
     } catch {
       setMessage('❌ Terjadi kesalahan')
     }
@@ -94,10 +93,8 @@ export default function CatatJual() {
 
           {/* Nama Barang */}
           <div>
-            {/* PERBAIKAN 2: Menambahkan htmlFor dan id agar label terhubung dengan input */}
-            <label htmlFor="itemName" className="block text-sm text-gray-500 mb-2">Nama Barang</label>
+            <label className="block text-sm text-gray-500 mb-2">Nama Barang</label>
             <input
-              id="itemName"
               type="text"
               value={itemName}
               onChange={(e) => setItemName(e.target.value)}
@@ -108,9 +105,8 @@ export default function CatatJual() {
 
           {/* Tanggal */}
           <div>
-            <label htmlFor="saleDate" className="block text-sm text-gray-500 mb-2">Tanggal Penjualan</label>
+            <label className="block text-sm text-gray-500 mb-2">Tanggal Penjualan</label>
             <input
-              id="saleDate"
               type="date"
               value={saleDate}
               onChange={(e) => setSaleDate(e.target.value)}
@@ -118,20 +114,19 @@ export default function CatatJual() {
             />
           </div>
 
-          {/* Harga Jual & Jumlah (Dibuat sejajar seperti Catat Bon) */}
+          {/* Harga Jual & Jumlah */}
           <div className="flex gap-3">
             
             {/* KOLOM KIRI: HARGA JUAL */}
             <div className="flex-1">
-              <label htmlFor="price" className="block text-sm text-gray-500 mb-2">Harga Jual (Rp)</label>
+              <label className="block text-sm text-gray-500 mb-2">Harga Jual (Rp)</label>
               <div className="h-12 flex items-center bg-gray-50 rounded-xl px-3 border border-gray-200 gap-2">
                 <IconCash size={16} color="#aaa" /> 
                 <input
-                  id="price"
                   type="number"
                   placeholder="0"
-                  value={price === 0 ? '' : price} 
-                  onChange={(e) => setPrice(e.target.value === '' ? 0 : Number(e.target.value))} 
+                  value={price === 0 ? '' : price}
+                  onChange={(e) => setPrice(e.target.value === '' ? 0 : Number(e.target.value))}
                   className="flex-1 bg-transparent text-sm focus:outline-none text-gray-700 w-full"
                 />
               </div>
@@ -139,21 +134,22 @@ export default function CatatJual() {
 
             {/* KOLOM KANAN: JUMLAH */}
             <div className="w-32">
-              <label htmlFor="quantity" className="block text-sm text-gray-500 mb-2">Jumlah</label>
+              <label className="block text-sm text-gray-500 mb-2">Jumlah</label>
               <div className="h-12 flex items-center bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
                 <button
-                  onClick={() => setQuantity(q => Math.max(1, q - 1))} 
+                  type="button"
+                  onClick={() => setQuantity(q => Math.max(1, q - 1))}
                   className="w-10 h-full text-gray-500 hover:bg-gray-100 text-lg font-bold flex items-center justify-center"
                 >−</button>
                 <input
-                  id="quantity"
                   type="number"
-                  value={quantity === 0 ? '' : quantity} 
-                  onChange={(e) => setQuantity(e.target.value === '' ? 0 : Number(e.target.value))} 
+                  value={quantity === 0 ? '' : quantity}
+                  onChange={(e) => setQuantity(e.target.value === '' ? 0 : Number(e.target.value))}
                   className="flex-1 bg-transparent text-sm text-center focus:outline-none text-gray-700 w-full"
                 />
                 <button
-                  onClick={() => setQuantity(q => q + 1)} 
+                  type="button"
+                  onClick={() => setQuantity(q => q + 1)}
                   className="w-10 h-full text-gray-500 hover:bg-gray-100 text-lg font-bold flex items-center justify-center"
                 >+</button>
               </div>
@@ -169,10 +165,10 @@ export default function CatatJual() {
 
           {/* Cara Bayar */}
           <div>
-            {/* Mengubah label menjadi paragraf karena di bawahnya adalah button, bukan input form */}
-            <p className="block text-sm text-gray-500 mb-3">Cara Bayar</p>
+            <p className="block text-sm text-gray-500 mb-3 font-medium">Cara Bayar</p>
             <div className="flex gap-3">
               <button
+                type="button"
                 onClick={() => setPaymentType('tunai')}
                 className={`flex-1 py-3 rounded-xl font-semibold text-sm transition ${
                   paymentType === 'tunai'
@@ -183,6 +179,7 @@ export default function CatatJual() {
                 💵 Tunai
               </button>
               <button
+                type="button"
                 onClick={() => setPaymentType('bon')}
                 className={`flex-1 py-3 rounded-xl font-semibold text-sm transition ${
                   paymentType === 'bon'
@@ -197,17 +194,16 @@ export default function CatatJual() {
 
           {/* Nama Pelanggan (hanya kalau Bon) */}
           {paymentType === 'bon' && (
-            <div>
-              <label htmlFor="customerName" className="block text-sm text-gray-500 mb-2">Nama Pelanggan</label>
+            <div className="space-y-2">
+              <label className="block text-sm text-gray-500">Nama Pelanggan</label>
               <input
-                id="customerName"
                 type="text"
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 placeholder="Nama pelanggan"
                 className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
               />
-              <div className="mt-3 bg-red-50 border border-red-200 rounded-xl p-3">
+              <div className="bg-red-50 border border-red-200 rounded-xl p-3">
                 <p className="text-xs text-red-700 font-semibold">📌 Akad Qardh</p>
                 <p className="text-xs text-red-600 mt-1">Pinjaman tanpa bunga sesuai syariah.</p>
               </div>
@@ -233,7 +229,6 @@ export default function CatatJual() {
         </button>
 
       </div>
-
     </main>
   )
 }

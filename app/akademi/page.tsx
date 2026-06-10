@@ -1,7 +1,6 @@
 'use client'
 
-import { useState } from 'react'
-import Link from 'next/link'
+import { useState, useEffect } from 'react'
 import { IconArrowLeft, IconHome, IconChartBar, IconRobot, IconBox, IconBook, IconClock, IconChevronRight, IconSchool, IconCoin, IconStar, IconScale, IconMoon, IconChartLine, IconBulb, IconShare } from '@tabler/icons-react'
 
 const modules = [
@@ -150,6 +149,12 @@ export default function Akademi() {
   return (
     <main className="min-h-screen bg-gray-100 pb-24">
 
+      {/* Menghilangkan scrollbar bawaan browser untuk class scrollbar-hide */}
+      <style dangerouslySetInnerHTML={{__html: `
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+      `}} />
+
       {selectedModule ? (
         /* Detail Modul */
         <>
@@ -176,9 +181,8 @@ export default function Akademi() {
               </div>
               <h2 className="text-lg font-bold text-[#1B4F3A] mb-4">{selectedModule.title}</h2>
               <div className="space-y-3">
-                {/* PERBAIKAN: Menghapus index 'i' sebagai key dan menggunakan string paragraf sebagai key unik */}
-                {selectedModule.content.split('\n\n').map((paragraph) => (
-                  <p key={paragraph} className="text-sm text-gray-600 leading-relaxed">{paragraph}</p>
+                {selectedModule.content.split('\n\n').map((paragraph, i) => (
+                  <p key={i} className="text-sm text-gray-600 leading-relaxed">{paragraph}</p>
                 ))}
               </div>
               
@@ -206,9 +210,9 @@ export default function Akademi() {
         <>
           <div className="bg-[#1B4F3A] px-5 py-4">
             <div className="flex items-center gap-3 mb-4">
-              <Link href="/dashboard" className="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center">
+              <a href="/dashboard" className="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center">
                 <IconArrowLeft size={20} color="white" />
-              </Link>
+              </a>
               <div>
                 <p className="text-white text-base font-bold">Akademi Warung</p>
                 <p className="text-white/60 text-xs">Belajar keuangan & syariah</p>
@@ -255,28 +259,28 @@ export default function Akademi() {
 
       {/* Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-3 flex justify-around items-center">
-        <Link href="/dashboard" className="flex flex-col items-center text-gray-400">
+        <a href="/dashboard" className="flex flex-col items-center text-gray-400">
           <IconHome size={24} />
           <span className="text-xs mt-0.5">Beranda</span>
-        </Link>
-        <Link href="/laporan" className="flex flex-col items-center text-gray-400">
+        </a>
+        <a href="/laporan" className="flex flex-col items-center text-gray-400">
           <IconChartBar size={24} />
           <span className="text-xs mt-0.5">Laporan</span>
-        </Link>
-        <Link href="/warpin-ai" className="flex flex-col items-center">
+        </a>
+        <a href="/warpin-ai" className="flex flex-col items-center">
           <div className="bg-[#B8860B] rounded-full w-14 h-14 flex items-center justify-center -mt-6 shadow-lg">
             <IconRobot size={24} color="white" />
           </div>
           <span className="text-xs text-[#B8860B] font-semibold mt-1">Warpin AI</span>
-        </Link>
-        <Link href="/stok" className="flex flex-col items-center text-gray-400">
+        </a>
+        <a href="/stok" className="flex flex-col items-center text-gray-400">
           <IconBox size={24} />
           <span className="text-xs mt-0.5">Stok</span>
-        </Link>
-        <Link href="/akademi" className="flex flex-col items-center text-[#1B4F3A]">
+        </a>
+        <a href="/akademi" className="flex flex-col items-center text-[#1B4F3A]">
           <IconBook size={24} />
           <span className="text-xs font-semibold mt-0.5">Akademi</span>
-        </Link>
+        </a>
       </div>
 
     </main>

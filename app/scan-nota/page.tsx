@@ -73,7 +73,7 @@ export default function ScanNota() {
 
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { globalThis.location.href = '/'; return }
+      if (!user) { window.location.href = '/'; return }
 
       // Simpan setiap item sebagai transaksi
       for (const item of items) {
@@ -170,7 +170,7 @@ export default function ScanNota() {
               </div>
               <p className="text-sm font-semibold text-gray-700">Upload Foto Struk</p>
               <p className="text-xs text-gray-400">Ambil foto struk/nota belanja kamu</p>
-              
+
               <label className="block">
                 <input
                   type="file"
@@ -229,12 +229,10 @@ export default function ScanNota() {
               <p className="text-sm font-bold text-gray-500 mb-3">Daftar Barang (Bisa diedit)</p>
               <div className="space-y-3">
                 {items.map((item, i) => (
-                  <div key={`scanned-item-${i}`} className="bg-gray-50 rounded-xl p-3 space-y-2 border border-gray-200">
+                  <div key={i} className="bg-gray-50 rounded-xl p-3 space-y-2 border border-gray-200">
                     <div>
-                      {/* PERBAIKAN SONAR: Ditambahkan htmlFor dan id unik menggunakan index {i} */}
-                      <label htmlFor={`itemName-${i}`} className="block text-xs text-gray-500 mb-1">Nama Barang</label>
+                      <label className="block text-xs text-gray-500 mb-1">Nama Barang</label>
                       <input
-                        id={`itemName-${i}`}
                         type="text"
                         value={item.name}
                         onChange={(e) => updateItem(i, 'name', e.target.value)}
@@ -244,10 +242,8 @@ export default function ScanNota() {
                     </div>
                     <div className="flex gap-2">
                       <div className="flex-1">
-                        {/* PERBAIKAN SONAR: Ditambahkan htmlFor dan id unik */}
-                        <label htmlFor={`itemPrice-${i}`} className="block text-xs text-gray-500 mb-1">Harga</label>
+                        <label className="block text-xs text-gray-500 mb-1">Harga</label>
                         <input
-                          id={`itemPrice-${i}`}
                           type="number"
                           value={item.price === 0 ? '' : item.price}
                           onChange={(e) => updateItem(i, 'price', e.target.value === '' ? 0 : Number(e.target.value))}
@@ -256,10 +252,8 @@ export default function ScanNota() {
                         />
                       </div>
                       <div className="w-20">
-                        {/* PERBAIKAN SONAR: Ditambahkan htmlFor dan id unik */}
-                        <label htmlFor={`itemQty-${i}`} className="block text-xs text-gray-500 mb-1">Qty</label>
+                        <label className="block text-xs text-gray-500 mb-1">Qty</label>
                         <input
-                          id={`itemQty-${i}`}
                           type="number"
                           value={item.quantity === 0 ? '' : item.quantity}
                           onChange={(e) => updateItem(i, 'quantity', e.target.value === '' ? 0 : Number(e.target.value))}

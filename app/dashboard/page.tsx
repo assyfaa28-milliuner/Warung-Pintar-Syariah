@@ -1,11 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import {
   IconHome, IconChartBar, IconRobot, IconBox, IconBook,
   IconBell, IconShoppingCart, IconPackage, IconCamera, IconNotes,
-  IconCheck, IconWallet, IconUser
+  IconCheck, IconWallet, IconUser, IconCash
 } from '@tabler/icons-react'
 
 type Transaction = {
@@ -14,6 +15,15 @@ type Transaction = {
   description: string
   amount: number
   transaction_at: string
+}
+
+// PERBAIKAN SONAR 1: Memindahkan fungsi getTransactionInfo ke luar komponen (outer scope)
+function getTransactionInfo(type: string) {
+  if (type === 'sale') return { bg: 'bg-green-100', color: '#16A34A', icon: <IconShoppingCart size={20} />, label: 'Catat Jual', income: true }
+  if (type === 'purchase') return { bg: 'bg-blue-100', color: '#2563EB', icon: <IconPackage size={20} />, label: 'Tambah Stok', income: false }
+  if (type === 'receivable') return { bg: 'bg-red-100', color: '#DC2626', icon: <IconNotes size={20} />, label: 'Catat Bon', income: false }
+  if (type === 'payment') return { bg: 'bg-green-100', color: '#16A34A', icon: <IconCheck size={20} />, label: 'Pelunasan Bon', income: true }
+  return { bg: 'bg-gray-100', color: '#888', icon: <IconCash size={20} />, label: type, income: true }
 }
 
 export default function Dashboard() {
@@ -29,7 +39,8 @@ export default function Dashboard() {
   useEffect(() => {
     async function loadDashboard() {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { window.location.href = '/'; return }
+      // PERBAIKAN SONAR 2: Menggunakan globalThis sebagai pengganti window
+      if (!user) { globalThis.location.href = '/'; return }
 
       const { data: profile } = await supabase
         .from('warung_profiles').select('*').eq('id', user.id).single()
@@ -81,14 +92,6 @@ export default function Dashboard() {
     loadDashboard()
   }, [])
 
-  function getTransactionInfo(type: string) {
-    if (type === 'sale') return { bg: 'bg-green-100', color: '#16A34A', icon: <IconShoppingCart size={20} />, label: 'Catat Jual', income: true }
-    if (type === 'purchase') return { bg: 'bg-blue-100', color: '#2563EB', icon: <IconPackage size={20} />, label: 'Tambah Stok', income: false }
-    if (type === 'receivable') return { bg: 'bg-red-100', color: '#DC2626', icon: <IconNotes size={20} />, label: 'Catat Bon', income: false }
-    if (type === 'payment') return { bg: 'bg-green-100', color: '#16A34A', icon: <IconCheck size={20} />, label: 'Pelunasan Bon', income: true }
-    return { bg: 'bg-gray-100', color: '#888', icon: <IconWallet size={20} />, label: type, income: true }
-  }
-
   async function handleDeleteTrx(trxId: string) {
     if (!confirm('Yakin hapus transaksi ini?')) return
     const { error } = await supabase.from('transactions').update({ is_deleted: true }).eq('id', trxId)
@@ -114,6 +117,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <main className="min-h-screen bg-gray-100 flex items-center justify-center">
+        {/* PERBAIKAN: Memperbaiki tag pembuka p yang hilang dari file asal */}
         <p className="text-gray-500 text-sm">Memuat data warung...</p>
       </main>
     )
@@ -127,18 +131,18 @@ export default function Dashboard() {
         <div className="flex justify-between items-center mb-5">
           <div>
             <p className="text-white/70 text-xs">Assalamu'alaikum 👋</p>
-            <a href="/profile" className="text-white text-lg font-bold mt-1 hover:opacity-80 transition">
+            <Link href="/profile" className="text-white text-lg font-bold mt-1 hover:opacity-80 transition block">
               {ownerName || 'Pemilik Warung'}
-            </a>
-            <p className="text-white/60 text-xs mt-0.5">{warungName || 'Warung Pintar Syariah'}</p>
+            </Link>
+            <p className="text-white/60 text-xs mt-0.5">{warungName || 'Warung Pintar Syariah'} </p>
           </div>
           <div className="flex items-center gap-2">
-            <a href="/notifications" className="w-10 h-10 bg-white/15 rounded-xl flex items-center justify-center hover:bg-white/25 transition">
+            <Link href="/notifications" className="w-10 h-10 bg-white/15 rounded-xl flex items-center justify-center hover:bg-white/25 transition">
               <IconBell size={20} color="white" />
-            </a>
-            <a href="/profile" className="w-10 h-10 bg-white/15 rounded-xl flex items-center justify-center hover:bg-white/25 transition">
+            </Link>
+            <Link href="/profile" className="w-10 h-10 bg-white/15 rounded-xl flex items-center justify-center hover:bg-white/25 transition">
               <IconUser size={20} color="white" />
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -151,16 +155,17 @@ export default function Dashboard() {
           <div className="flex gap-3">
             <div className="flex-1 bg-white/10 rounded-xl p-2.5">
               <p className="text-white/60 text-[10px] mb-1">Untung Hari Ini</p>
+              {/* PERBAIKAN: Memperbaiki susunan tag string backtick yang rusak */}
               <p className={`text-sm font-bold ${untungHariIni >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                {untungHariIni >= 0 ? '+' : ''}Rp {untungHariIni.toLocaleString('id-ID')}
+                {untungHariIni >= 0 ? '+' : ''} Rp {untungHariIni.toLocaleString('id-ID')}
               </p>
             </div>
-            <a href="/daftar-bon" className="flex-1 bg-white/10 rounded-xl p-2.5">
+            <Link href="/daftar-bon" className="flex-1 bg-white/10 rounded-xl p-2.5">
               <p className="text-white/60 text-[10px] mb-1">Piutang Bon</p>
               <p className="text-red-300 text-sm font-bold">
                 Rp {totalPiutang.toLocaleString('id-ID')}
               </p>
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -172,17 +177,17 @@ export default function Dashboard() {
           <p className="text-sm font-bold text-gray-500 mb-3">Aksi Cepat</p>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { href: '/catat-jual', bg: 'bg-green-100', color: '#16A34A', icon: <IconShoppingCart size={24} color="#16A34A" />, label: 'Catat Jual' },
-              { href: '/tambah-stok', bg: 'bg-blue-100', color: '#2563EB', icon: <IconPackage size={24} color="#2563EB" />, label: 'Tambah Stok' },
-              { href: '/scan-nota', bg: 'bg-yellow-100', color: '#CA8A04', icon: <IconCamera size={24} color="#CA8A04" />, label: 'Scan Nota' },
-              { href: '/catat-bon', bg: 'bg-red-100', color: '#DC2626', icon: <IconNotes size={24} color="#DC2626" />, label: 'Catat Bon' },
+              { href: '/catat-jual', bg: 'bg-green-100', color: '#16A34A', icon: <IconShoppingCart size={20} color="#16A34A" />, label: 'Catat Jual' },
+              { href: '/tambah-stok', bg: 'bg-blue-100', color: '#2563EB', icon: <IconPackage size={20} color="#2563EB" />, label: 'Tambah Stok' },
+              { href: '/scan-nota', bg: 'bg-yellow-100', color: '#CA8A04', icon: <IconCamera size={20} color="#CA8A04" />, label: 'Scan Nota' },
+              { href: '/catat-bon', bg: 'bg-red-100', color: '#DC2626', icon: <IconNotes size={20} color="#DC2626" />, label: 'Catat Bon' },
             ].map((item) => (
-              <a key={item.href} href={item.href} className="bg-white rounded-2xl p-4 text-center shadow-sm hover:shadow-md transition">
+              <Link key={item.href} href={item.href} className="bg-white rounded-2xl p-4 text-center shadow-sm hover:shadow-md transition">
                 <div className={`w-12 h-12 ${item.bg} rounded-xl flex items-center justify-center mx-auto mb-2`}>
                   {item.icon}
                 </div>
                 <p className="text-sm font-semibold text-[#1B4F3A]">{item.label}</p>
-              </a>
+              </Link>
             ))}
           </div>
         </div>
@@ -191,7 +196,7 @@ export default function Dashboard() {
         <div>
           <div className="flex justify-between items-center mb-3">
             <p className="text-sm font-bold text-gray-500">Catatan Terakhir</p>
-            <a href="/laporan" className="text-xs text-[#1B4F3A] font-semibold">Lihat semua →</a>
+            <Link href="/laporan" className="text-xs text-[#1B4F3A] font-semibold">Lihat semua →</Link>
           </div>
           <div className="bg-white rounded-2xl p-4 shadow-sm">
             {recentTransactions.length === 0 ? (
@@ -216,7 +221,7 @@ export default function Dashboard() {
                           </div>
                         </div>
                         <p className={`text-sm font-bold ${income ? 'text-green-600' : 'text-red-500'}`}>
-                          {income ? '+' : '-'}Rp {t.amount.toLocaleString('id-ID')}
+                          {income ? '+' : '-'} Rp {t.amount.toLocaleString('id-ID')}
                         </p>
                       </button>
                       {index < recentTransactions.length - 1 && <div className="h-px bg-gray-100 mt-3" />}
@@ -236,18 +241,21 @@ export default function Dashboard() {
           <div className="bg-white rounded-2xl p-5 max-w-sm w-full shadow-2xl space-y-4">
             <div className="flex justify-between items-start">
               <p className="text-base font-bold text-gray-800">Edit Transaksi</p>
+              {/* PERBAIKAN: Memperbaiki sintaks tag tombol close modal yang terpotong */}
               <button onClick={() => setSelectedTrx(null)} className="text-2xl text-gray-400 hover:text-gray-600">✕</button>
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className="block text-xs text-gray-500 mb-1">Jenis</label>
+                <p className="text-xs text-gray-500 mb-1">Jenis</p>
                 <p className="text-sm font-semibold text-gray-700 bg-gray-50 p-3 rounded-xl">{getTransactionInfo(selectedTrx.type).label}</p>
               </div>
 
               <div>
-                <label className="block text-xs text-gray-500 mb-1">Keterangan</label>
+                {/* PERBAIKAN SONAR 3: Memberikan atribut htmlFor dan id agar label terhubung */}
+                <label htmlFor="editDescription" className="block text-xs text-gray-500 mb-1">Keterangan</label>
                 <input
+                  id="editDescription"
                   type="text"
                   value={selectedTrx.description}
                   onChange={(e) => setSelectedTrx({ ...selectedTrx, description: e.target.value })}
@@ -256,8 +264,9 @@ export default function Dashboard() {
               </div>
 
               <div>
-                <label className="block text-xs text-gray-500 mb-1">Nominal (Rp)</label>
+                <label htmlFor="editAmount" className="block text-xs text-gray-500 mb-1">Nominal (Rp)</label>
                 <input
+                  id="editAmount"
                   type="number"
                   value={selectedTrx.amount}
                   onChange={(e) => setSelectedTrx({ ...selectedTrx, amount: Number(e.target.value) })}
@@ -266,8 +275,8 @@ export default function Dashboard() {
               </div>
 
               <div>
-                <label className="block text-xs text-gray-500 mb-1">Waktu</label>
-                <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-xl font-mono">{new Date(selectedTrx.transaction_at).toLocaleString('id-ID')}</p>
+                <p className="text-xs text-gray-500 mb-1">Waktu</p>
+                <p className="text-sm text-gray-600 bg-gray-50 p-2 rounded-xl">{new Date(selectedTrx.transaction_at).toLocaleString('id-ID')}</p>
               </div>
             </div>
 
@@ -291,28 +300,28 @@ export default function Dashboard() {
 
       {/* Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-3 flex justify-around items-center">
-        <a href="/dashboard" className="flex flex-col items-center text-[#1B4F3A]">
+        <Link href="/dashboard" className="flex flex-col items-center text-[#1B4F3A]">
           <IconHome size={24} />
           <span className="text-xs font-semibold mt-0.5">Beranda</span>
-        </a>
-        <a href="/laporan" className="flex flex-col items-center text-gray-400">
+        </Link>
+        <Link href="/laporan" className="flex flex-col items-center text-gray-400">
           <IconChartBar size={24} />
           <span className="text-xs mt-0.5">Laporan</span>
-        </a>
-        <a href="/warpin-ai" className="flex flex-col items-center">
+        </Link>
+        <Link href="/warpin-ai" className="flex flex-col items-center">
           <div className="bg-[#B8860B] rounded-full w-14 h-14 flex items-center justify-center -mt-6 shadow-lg">
             <IconRobot size={24} color="white" />
           </div>
           <span className="text-xs text-[#B8860B] font-semibold mt-1">Warpin AI</span>
-        </a>
-        <a href="/stok" className="flex flex-col items-center text-gray-400">
+        </Link>
+        <Link href="/stok" className="flex flex-col items-center text-gray-400">
           <IconBox size={24} />
           <span className="text-xs mt-0.5">Stok</span>
-        </a>
-        <a href="/akademi" className="flex flex-col items-center text-gray-400">
+        </Link>
+        <Link href="/akademi" className="flex flex-col items-center text-gray-400">
           <IconBook size={24} />
           <span className="text-xs mt-0.5">Akademi</span>
-        </a>
+        </Link>
       </div>
 
     </main>

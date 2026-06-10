@@ -94,9 +94,7 @@ export default function Profile() {
         .eq('id', user.id)
 
       setMessage('✅ PIN berhasil diubah!')
-      setOldPin('')
-      setNewPin('')
-      setConfirmPin('')
+      setOldPin(''); setNewPin(''); setConfirmPin('')
       setShowChangePIN(false)
       setTimeout(() => setMessage(''), 3000)
     } catch {
@@ -111,7 +109,6 @@ export default function Profile() {
       if (!user) return
 
       setLoading(true)
-
       const [transactionsData, inventoryData, receivablesData] = await Promise.all([
         supabase.from('transactions').select('*').eq('warung_id', user.id),
         supabase.from('inventory').select('*').eq('warung_id', user.id),
@@ -155,8 +152,6 @@ export default function Profile() {
 
   return (
     <main className="min-h-screen bg-gray-100 pb-24">
-
-      {/* Header */}
       <div className="bg-[#1B4F3A] px-5 py-4 flex items-center gap-3">
         <a href="/dashboard" className="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center">
           <IconArrowLeft size={20} color="white" />
@@ -171,12 +166,10 @@ export default function Profile() {
       </div>
 
       <div className="px-4 py-5 space-y-4">
-
         {loading ? (
           <p className="text-center text-gray-400 py-8">Memuat profil...</p>
         ) : (
           <>
-            {/* Card Profil */}
             <div className="bg-white rounded-2xl p-6 shadow-sm space-y-4">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 bg-[#1B4F3A] rounded-2xl flex items-center justify-center">
@@ -190,35 +183,30 @@ export default function Profile() {
               </div>
             </div>
 
-            {/* Edit Profil */}
             {editing ? (
               <div className="bg-white rounded-2xl p-5 shadow-sm space-y-4">
                 <p className="text-sm font-bold text-gray-500">Edit Profil</p>
-
                 <div>
-                  <label className="block text-sm text-gray-500 mb-2">Nama Pemilik</label>
+                  <label htmlFor="owner_name" className="block text-sm text-gray-500 mb-2">Nama Pemilik</label>
                   <div className="flex items-center bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 gap-3">
                     <IconUser size={18} color="#aaa" />
-                    <input type="text" value={formData.owner_name} onChange={(e) => setFormData({ ...formData, owner_name: e.target.value })} className="flex-1 bg-transparent text-sm focus:outline-none text-gray-700" />
+                    <input id="owner_name" type="text" value={formData.owner_name} onChange={(e) => setFormData({ ...formData, owner_name: e.target.value })} className="flex-1 bg-transparent text-sm focus:outline-none text-gray-700" />
                   </div>
                 </div>
-
                 <div>
-                  <label className="block text-sm text-gray-500 mb-2">Nama Warung</label>
+                  <label htmlFor="warung_name" className="block text-sm text-gray-500 mb-2">Nama Warung</label>
                   <div className="flex items-center bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 gap-3">
                     <IconBuildingStore size={18} color="#aaa" />
-                    <input type="text" value={formData.warung_name} onChange={(e) => setFormData({ ...formData, warung_name: e.target.value })} className="flex-1 bg-transparent text-sm focus:outline-none text-gray-700" />
+                    <input id="warung_name" type="text" value={formData.warung_name} onChange={(e) => setFormData({ ...formData, warung_name: e.target.value })} className="flex-1 bg-transparent text-sm focus:outline-none text-gray-700" />
                   </div>
                 </div>
-
                 <div>
-                  <label className="block text-sm text-gray-500 mb-2">Nomor HP</label>
+                  <label htmlFor="phone_number" className="block text-sm text-gray-500 mb-2">Nomor HP</label>
                   <div className="flex items-center bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 gap-3">
                     <IconDeviceMobile size={18} color="#aaa" />
-                    <input type="tel" value={formData.phone_number} onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })} className="flex-1 bg-transparent text-sm focus:outline-none text-gray-700" />
+                    <input id="phone_number" type="tel" value={formData.phone_number} onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })} className="flex-1 bg-transparent text-sm focus:outline-none text-gray-700" />
                   </div>
                 </div>
-
                 <div className="flex gap-2">
                   <button onClick={handleSave} disabled={loading} className="flex-1 bg-[#1B4F3A] text-white py-3 rounded-xl font-semibold text-sm">
                     {loading ? 'Menyimpan...' : 'Simpan Perubahan'}
@@ -234,21 +222,20 @@ export default function Profile() {
               </button>
             )}
 
-            {/* Ganti PIN */}
             {showChangePIN ? (
               <div className="bg-white rounded-2xl p-5 shadow-sm space-y-4 border border-blue-200">
                 <p className="text-sm font-bold text-gray-500">Ganti PIN</p>
                 <div>
-                  <label className="block text-sm text-gray-500 mb-2">PIN Lama (6 digit)</label>
-                  <input type="password" maxLength={6} value={oldPin} onChange={(e) => setOldPin(e.target.value.slice(0, 6))} className="w-full bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 text-center text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-[#1B4F3A]" placeholder="••••••" />
+                  <label htmlFor="oldPin" className="block text-sm text-gray-500 mb-2">PIN Lama (6 digit)</label>
+                  <input id="oldPin" type="password" maxLength={6} value={oldPin} onChange={(e) => setOldPin(e.target.value.slice(0, 6))} className="w-full bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 text-center text-lg focus:outline-none focus:ring-2 focus:ring-[#1B4F3A]" placeholder="••••••" />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-500 mb-2">PIN Baru (6 digit)</label>
-                  <input type="password" maxLength={6} value={newPin} onChange={(e) => setNewPin(e.target.value.slice(0, 6))} className="w-full bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 text-center text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-[#1B4F3A]" placeholder="••••••" />
+                  <label htmlFor="newPin" className="block text-sm text-gray-500 mb-2">PIN Baru (6 digit)</label>
+                  <input id="newPin" type="password" maxLength={6} value={newPin} onChange={(e) => setNewPin(e.target.value.slice(0, 6))} className="w-full bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 text-center text-lg focus:outline-none focus:ring-2 focus:ring-[#1B4F3A]" placeholder="••••••" />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-500 mb-2">Ulangi PIN Baru</label>
-                  <input type="password" maxLength={6} value={confirmPin} onChange={(e) => setConfirmPin(e.target.value.slice(0, 6))} className="w-full bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 text-center text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-[#1B4F3A]" placeholder="••••••" />
+                  <label htmlFor="confirmPin" className="block text-sm text-gray-500 mb-2">Ulangi PIN Baru</label>
+                  <input id="confirmPin" type="password" maxLength={6} value={confirmPin} onChange={(e) => setConfirmPin(e.target.value.slice(0, 6))} className="w-full bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 text-center text-lg focus:outline-none focus:ring-2 focus:ring-[#1B4F3A]" placeholder="••••••" />
                 </div>
                 <div className="flex gap-2">
                   <button onClick={handleChangePIN} disabled={loading} className="flex-1 bg-blue-500 text-white py-3 rounded-xl font-semibold text-sm">Ganti PIN</button>
@@ -261,23 +248,18 @@ export default function Profile() {
               </button>
             )}
 
-            {/* Tombol-tombol Aksi */}
             <div className="space-y-3">
-              <button onClick={handleBackup} disabled={loading} className="w-full bg-white border border-gray-200 text-gray-700 py-3 rounded-xl font-semibold text-sm hover:bg-gray-50 flex items-center justify-center gap-2">
+              <button onClick={handleBackup} disabled={loading} className="w-full bg-white border border-gray-200 text-gray-700 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2">
                 <IconDownload size={18} /> Backup Data Warung
               </button>
-              
-              {/* Tombol Saldo Awal */}
-              <button onClick={() => setShowSaldoModal(true)} className="w-full bg-white border border-gray-200 text-gray-700 py-3 rounded-xl font-semibold text-sm hover:bg-gray-50 flex items-center justify-center gap-2">
+              <button onClick={() => setShowSaldoModal(true)} className="w-full bg-white border border-gray-200 text-gray-700 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2">
                 <IconWallet size={18} /> Atur Saldo Awal
               </button>
-              
-              <button onClick={handleAddWarung} className="w-full bg-white border border-gray-200 text-gray-700 py-3 rounded-xl font-semibold text-sm hover:bg-gray-50 flex items-center justify-center gap-2">
+              <button onClick={handleAddWarung} className="w-full bg-white border border-gray-200 text-gray-700 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2">
                 <IconPlus size={18} /> Tambah Warung Baru
               </button>
             </div>
 
-            {/* Logout */}
             <button onClick={handleLogout} className="w-full bg-red-500 text-white py-3.5 rounded-xl font-semibold text-sm hover:bg-red-600 transition flex items-center justify-center gap-2">
               <IconLogout size={18} /> Logout
             </button>
@@ -291,53 +273,25 @@ export default function Profile() {
         )}
       </div>
 
-      {/* Modal Saldo Awal */}
       {showSaldoModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center p-4">
-          <div className="bg-white rounded-t-3xl w-full max-w-sm p-6 space-y-4 animate-in slide-in-from-bottom">
+          <div className="bg-white rounded-t-3xl w-full max-w-sm p-6 space-y-4">
             <div className="flex justify-between items-center">
               <p className="font-bold text-lg text-gray-800">Atur Saldo Awal</p>
               <button onClick={() => setShowSaldoModal(false)}><IconX size={20} /></button>
             </div>
             <div>
-              <label className="text-sm text-gray-500">Kas Awal (Rp)</label>
-              <input type="number" value={formData.initial_cash || 0} onChange={(e) => setFormData({...formData, initial_cash: Number(e.target.value)})} className="w-full bg-gray-50 rounded-xl p-3 mt-1" />
+              <label htmlFor="initialCash" className="text-sm text-gray-500">Kas Awal (Rp)</label>
+              <input id="initialCash" type="number" value={formData.initial_cash || 0} onChange={(e) => setFormData({...formData, initial_cash: Number(e.target.value)})} className="w-full bg-gray-50 rounded-xl p-3 mt-1" />
             </div>
             <div>
-              <label className="text-sm text-gray-500">Utang Awal (Rp)</label>
-              <input type="number" value={formData.initial_debt || 0} onChange={(e) => setFormData({...formData, initial_debt: Number(e.target.value)})} className="w-full bg-gray-50 rounded-xl p-3 mt-1" />
+              <label htmlFor="initialDebt" className="text-sm text-gray-500">Utang Awal (Rp)</label>
+              <input id="initialDebt" type="number" value={formData.initial_debt || 0} onChange={(e) => setFormData({...formData, initial_debt: Number(e.target.value)})} className="w-full bg-gray-50 rounded-xl p-3 mt-1" />
             </div>
             <button onClick={handleSave} className="w-full bg-[#1B4F3A] text-white py-3 rounded-xl font-bold">Simpan Saldo</button>
           </div>
         </div>
       )}
-
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-3 flex justify-around items-center">
-        <a href="/dashboard" className="flex flex-col items-center text-gray-400">
-          <IconHome size={24} />
-          <span className="text-xs mt-0.5">Beranda</span>
-        </a>
-        <a href="/laporan" className="flex flex-col items-center text-gray-400">
-          <IconChartBar size={24} />
-          <span className="text-xs mt-0.5">Laporan</span>
-        </a>
-        <a href="/warpin-ai" className="flex flex-col items-center">
-          <div className="bg-[#B8860B] rounded-full w-14 h-14 flex items-center justify-center -mt-6 shadow-lg">
-            <IconRobot size={24} color="white" />
-          </div>
-          <span className="text-xs text-[#B8860B] font-semibold mt-1">Warpin AI</span>
-        </a>
-        <a href="/stok" className="flex flex-col items-center text-gray-400">
-          <IconBox size={24} />
-          <span className="text-xs mt-0.5">Stok</span>
-        </a>
-        <a href="/akademi" className="flex flex-col items-center text-gray-400">
-          <IconBook size={24} />
-          <span className="text-xs mt-0.5">Akademi</span>
-        </a>
-      </div>
-
     </main>
   )
 }

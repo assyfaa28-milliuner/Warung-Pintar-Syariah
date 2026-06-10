@@ -52,7 +52,7 @@ export default function ScanNota() {
         if (data.items && data.items.length > 0) {
           setItems(data.items)
           setStep('preview')
-          setMessage('✅ Struk berhasil di-scan! Review data di bawah.')
+          setMessage('✅ Struk berhasil di-scan! Review data below.')
         } else {
           setMessage('❌ Tidak bisa membaca struk. Coba foto yang lebih jelas!')
         }
@@ -73,7 +73,7 @@ export default function ScanNota() {
 
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { window.location.href = '/'; return }
+      if (!user) { globalThis.location.href = '/'; return }
 
       // Simpan setiap item sebagai transaksi
       for (const item of items) {
@@ -86,7 +86,7 @@ export default function ScanNota() {
           amount: total,
         })
 
-        // Update atau create inventory
+        // Update or create inventory
         const { data: existing } = await supabase
           .from('inventory')
           .select('*')
@@ -229,10 +229,12 @@ export default function ScanNota() {
               <p className="text-sm font-bold text-gray-500 mb-3">Daftar Barang (Bisa diedit)</p>
               <div className="space-y-3">
                 {items.map((item, i) => (
-                  <div key={i} className="bg-gray-50 rounded-xl p-3 space-y-2 border border-gray-200">
+                  <div key={`scanned-item-${i}`} className="bg-gray-50 rounded-xl p-3 space-y-2 border border-gray-200">
                     <div>
-                      <label className="block text-xs text-gray-500 mb-1">Nama Barang</label>
+                      {/* PERBAIKAN SONAR: Ditambahkan htmlFor dan id unik menggunakan index {i} */}
+                      <label htmlFor={`itemName-${i}`} className="block text-xs text-gray-500 mb-1">Nama Barang</label>
                       <input
+                        id={`itemName-${i}`}
                         type="text"
                         value={item.name}
                         onChange={(e) => updateItem(i, 'name', e.target.value)}
@@ -242,20 +244,24 @@ export default function ScanNota() {
                     </div>
                     <div className="flex gap-2">
                       <div className="flex-1">
-                        <label className="block text-xs text-gray-500 mb-1">Harga</label>
+                        {/* PERBAIKAN SONAR: Ditambahkan htmlFor dan id unik */}
+                        <label htmlFor={`itemPrice-${i}`} className="block text-xs text-gray-500 mb-1">Harga</label>
                         <input
+                          id={`itemPrice-${i}`}
                           type="number"
-                          value={item.price === 0 ? '' : item.price} // <-- Angka 0 mudah dihapus
+                          value={item.price === 0 ? '' : item.price}
                           onChange={(e) => updateItem(i, 'price', e.target.value === '' ? 0 : Number(e.target.value))}
                           className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B4F3A]"
                           placeholder="0"
                         />
                       </div>
                       <div className="w-20">
-                        <label className="block text-xs text-gray-500 mb-1">Qty</label>
+                        {/* PERBAIKAN SONAR: Ditambahkan htmlFor dan id unik */}
+                        <label htmlFor={`itemQty-${i}`} className="block text-xs text-gray-500 mb-1">Qty</label>
                         <input
+                          id={`itemQty-${i}`}
                           type="number"
-                          value={item.quantity === 0 ? '' : item.quantity} // <-- Angka 0 mudah dihapus
+                          value={item.quantity === 0 ? '' : item.quantity}
                           onChange={(e) => updateItem(i, 'quantity', e.target.value === '' ? 0 : Number(e.target.value))}
                           className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B4F3A]"
                           placeholder="1"

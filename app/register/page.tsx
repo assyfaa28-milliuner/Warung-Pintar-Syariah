@@ -19,7 +19,6 @@ export default function Register() {
   const [message, setMessage] = useState('')
 
   async function handleRegister() {
-    // Validasi input
     if (!ownerName || !warungName || !phoneNumber || !pin || !confirmPin) {
       setMessage('❌ Semua kolom wajib diisi!')
       return
@@ -37,7 +36,6 @@ export default function Register() {
     setMessage('')
 
     try {
-      // Daftar ke Supabase Auth pakai nomor HP sebagai email
       const fakeEmail = `${phoneNumber}@warpin.app`
       const { data, error } = await supabase.auth.signUp({
         email: fakeEmail,
@@ -49,7 +47,6 @@ export default function Register() {
         return
       }
 
-      // Simpan data profil warung
       const { error: profileError } = await supabase
         .from('warung_profiles')
         .insert({
@@ -66,7 +63,6 @@ export default function Register() {
       }
 
       setMessage('✅ Pendaftaran berhasil! Silakan masuk.')
-      // PERBAIKAN 1: Menggunakan globalThis sebagai pengganti window
       setTimeout(() => {
         globalThis.location.href = '/'
       }, 2000)
@@ -93,7 +89,6 @@ export default function Register() {
           <div className="px-8 pb-10 pt-8 bg-white">
             <div className="space-y-4">
               <div>
-                {/* PERBAIKAN 2: Menambahkan htmlFor dan id untuk Nama Pemilik */}
                 <label htmlFor="ownerName" className="block text-sm text-gray-700 mb-2">Nama Pemilik</label>
                 <div className="flex items-center gap-3 rounded-2xl border border-[#E5E2D8] bg-[#F8F7F2] px-4 py-3">
                   <div className="w-6 h-6 rounded-md flex items-center justify-center border border-[#E5E2D8] bg-white text-gray-600">
@@ -114,7 +109,6 @@ export default function Register() {
               </div>
 
               <div>
-                {/* PERBAIKAN 3: Menambahkan htmlFor dan id untuk Nama Warung */}
                 <label htmlFor="warungName" className="block text-sm text-gray-700 mb-2">Nama Warung</label>
                 <div className="flex items-center gap-3 rounded-2xl border border-[#E5E2D8] bg-[#F8F7F2] px-4 py-3">
                   <div className="w-6 h-6 rounded-md flex items-center justify-center border border-[#E5E2D8] bg-white text-gray-600">
@@ -136,7 +130,6 @@ export default function Register() {
               </div>
 
               <div>
-                {/* PERBAIKAN 4: Menambahkan htmlFor dan id untuk Nomor HP */}
                 <label htmlFor="phoneNumber" className="block text-sm text-gray-700 mb-3">Nomor HP</label>
                 <div className="flex items-center gap-3 rounded-[26px] border border-[#E8E3D7] bg-[#F6F4EB] px-4 py-4">
                   <svg viewBox="0 0 24 24" className="w-5 h-5 text-gray-600 flex-shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -155,15 +148,17 @@ export default function Register() {
               </div>
 
               <div>
-                {/* PERBAIKAN 5: Menambahkan htmlFor dan id untuk Buat PIN */}
                 <label htmlFor="pinInput" className="block text-sm text-gray-700 mb-3">Buat PIN (6 digit)</label>
                 <div
                   className="grid grid-cols-6 gap-2.5 mb-3 cursor-text"
                   onClick={() => pinRef.current?.focus()}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') pinRef.current?.focus() }}
                 >
-                  {[...Array(6)].map((_, i) => (
+                  {[...new Array(6)].map((_, i) => (
                     <div
-                      key={i}
+                      key={`pin1-${i}`}
                       className={`h-12 w-12 rounded-[16px] border ${pinFocused && i === pin.length ? 'border-[#1B4F3A]' : 'border-[#E8E3D7]'} bg-[#F6F4EB] flex items-center justify-center text-2xl font-semibold text-gray-700`}
                     >
                       {pin[i] ? '•' : pinFocused && i === pin.length ? <span className="block h-5 w-[2px] rounded bg-[#1B4F3A] animate-pulse" /> : ''}
@@ -186,15 +181,17 @@ export default function Register() {
               </div>
 
               <div>
-                {/* PERBAIKAN 6: Menambahkan htmlFor dan id untuk Ulangi PIN */}
                 <label htmlFor="confirmPinInput" className="block text-sm text-gray-700 mb-3">Ulangi PIN</label>
                 <div
                   className="grid grid-cols-6 gap-2.5 mb-3 cursor-text"
                   onClick={() => confirmPinRef.current?.focus()}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') confirmPinRef.current?.focus() }}
                 >
-                  {[...Array(6)].map((_, i) => (
+                  {[...new Array(6)].map((_, i) => (
                     <div
-                      key={i}
+                      key={`pin2-${i}`}
                       className={`h-12 w-12 rounded-[16px] border ${confirmFocused && i === confirmPin.length ? 'border-[#1B4F3A]' : 'border-[#E8E3D7]'} bg-[#F6F4EB] flex items-center justify-center text-2xl font-semibold text-gray-700`}
                     >
                       {confirmPin[i] ? '•' : confirmFocused && i === confirmPin.length ? <span className="block h-5 w-[2px] rounded bg-[#1B4F3A] animate-pulse" /> : ''}

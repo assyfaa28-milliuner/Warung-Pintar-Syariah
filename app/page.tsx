@@ -39,7 +39,6 @@ export default function Home() {
       }
 
       setMessage('✅ Login berhasil! Mengalihkan...')
-      // PERBAIKAN 1: Menggunakan globalThis sebagai pengganti window
       setTimeout(() => {
         globalThis.location.href = '/dashboard'
       }, 1200)
@@ -71,7 +70,6 @@ export default function Home() {
 
             <div className="space-y-5">
               <div>
-                {/* PERBAIKAN 2: Menambahkan htmlFor dan id untuk Nomor HP */}
                 <label htmlFor="phoneNumber" className="block text-sm text-gray-700 mb-3">Nomor HP</label>
                 <div className="flex items-center gap-3 rounded-[20px] border border-[#E8E3D7] bg-[#F6F4EB] px-4 py-3">
                   <svg viewBox="0 0 24 24" className="w-5 h-5 text-gray-600 flex-shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -90,12 +88,17 @@ export default function Home() {
               </div>
 
               <div>
-                {/* PERBAIKAN 3: Menambahkan htmlFor dan id untuk PIN */}
                 <label htmlFor="pinInput" className="block text-sm text-gray-700 mb-3">PIN (6 digit)</label>
-                <div className="grid grid-cols-6 gap-2.5 mb-3 cursor-text" onClick={() => pinRef.current?.focus()}>
-                  {[...Array(6)].map((_, i) => (
+                <div 
+                  className="grid grid-cols-6 gap-2.5 mb-3 cursor-text" 
+                  onClick={() => pinRef.current?.focus()}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') pinRef.current?.focus() }}
+                >
+                  {[...new Array(6)].map((_, i) => (
                     <div
-                      key={i}
+                      key={`pin-${i}`}
                       className={`h-12 w-12 rounded-[16px] border ${pinFocused && i === pin.length ? 'border-[#1B4F3A]' : 'border-[#E8E3D7]'} bg-[#F6F4EB] flex items-center justify-center text-2xl font-semibold text-gray-700`}
                     >
                       {pin[i] ? '•' : pinFocused && i === pin.length ? <span className="block h-5 w-[2px] rounded bg-[#1B4F3A] animate-pulse" /> : ''}

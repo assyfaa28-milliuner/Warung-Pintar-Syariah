@@ -145,7 +145,7 @@ export default function Neraca() {
             <div className="bg-blue-50 rounded-2xl p-4 border border-blue-100">
               <p className="text-xs text-blue-600 font-semibold mb-1">📚 Tahukah Kamu?</p>
               <p className="text-sm text-blue-700">
-                Neraca adalah "foto kondisi warung hari ini". Harta Warung adalah semua yang warung miliki: uang di laci, barang di rak, dan bon pelanggan yang belum lunas.
+                Neraca adalah foto kondisi warung hari ini. Harta Warung adalah semua yang warung miliki: uang di laci, barang di rak, dan bon pelanggan yang belum lunas.
               </p>
             </div>
 

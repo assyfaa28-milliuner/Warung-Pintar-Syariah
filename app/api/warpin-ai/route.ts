@@ -1,30 +1,51 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { NextRequest, NextResponse } from 'next/server'
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY!)
 
-export async function POST(request: NextRequest) {
-  const { message } = await request.json()
-
+export async function POST(req: NextRequest) {
   try {
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-3.1-flash-lite',
-      systemInstruction: `Kamu adalah Warpin AI, asisten keuangan warung kelontong berbasis syariah di Indonesia.
-Bantu pemilik warung memahami keuangan mereka dengan bahasa yang sangat sederhana dan ramah.
-Hindari istilah teknis akuntansi. Gunakan bahasa sehari-hari Bahasa Indonesia.
-Topik yang bisa dijawab: fitur Warpin, laporan keuangan sederhana, zakat tijarah, akad qardh, tips kelola warung.
-Maksimal 3 paragraf per jawaban. Selalu awali dengan sapaan hangat seperti "Halo Kak!" atau "Tentu Kak!".`
+    const { message } = await req.json()
+    
+    if (!message) {
+      return NextResponse.json({ error: 'Pesan wajib diisi' }, { status: 400 })
+    }
+
+    const model = genAI.getGenerativeModel({ model: 'gemini-3.1-flash-lite' })
+    
+    const systemPrompt = `Kamu adalah Warpin AI, asisten keuangan warung kelontong yang berbasis syariah Islam.
+
+Instruksi:
+- Jawab dalam bahasa Indonesia yang sederhana dan ramah
+- Fokus pada: akuntansi warung, hukum Islam muamalah (akad qardh, riba, zakat tijarah), tips mengelola warung
+- Jawab maksimal 3 paragraf, tidak perlu terlalu panjang
+- Gunakan emoji yang sesuai
+- Jika ditanya soal lain, tanyakan kembali tentang topik warung/keuangan
+
+Mulai percakapan dengan salam ramah jika belum pernah chat sebelumnya.`
+
+    const chat = model.startChat({
+      history: [
+        {
+          role: 'user',
+          parts: [{ text: systemPrompt }],
+        },
+        {
+          role: 'model',
+          parts: [{ text: 'Baik, saya Warpin AI. Siap membantu keuangan warung kamu! 😊' }],
+        },
+      ],
     })
 
-    const result = await model.generateContent(message)
+    const result = await chat.sendMessage(message)
     const reply = result.response.text()
 
     return NextResponse.json({ reply })
-
   } catch (error) {
-    console.error('Gemini AI error:', error)
-    return NextResponse.json({
-      reply: 'Maaf Kak, Warpin AI sedang tidak bisa dihubungi. Coba lagi sebentar ya! 😊'
-    })
+    console.error('Error Warpin AI:', error)
+    return NextResponse.json(
+      { error: 'Maaf, terjadi kesalahan. Coba lagi nanti ya!' },
+      { status: 500 }
+    )
   }
 }

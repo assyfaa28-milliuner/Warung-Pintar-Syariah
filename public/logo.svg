@@ -1,0 +1,9 @@
+<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">Warpin shop icon</title>
+  <rect width="128" height="128" rx="32" fill="#1a5135" />
+  <rect x="14" y="14" width="100" height="100" rx="24" fill="#45705a" />
+  <path d="M28 48 C34 36 42 32 50 44 C58 32 66 32 74 44 C82 32 90 36 96 48" stroke="#ffffff" strokeWidth="8" strokeLinecap="round" fill="none" />
+  <path d="M24 52 H104 V84 C104 90 98 96 92 96 H36 C30 96 24 90 24 84 V52 Z" stroke="#ffffff" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+  <rect x="54" y="64" width="20" height="24" rx="3" fill="#ffffff" />
+  <path d="M58 64 V88" stroke="#1a5135" strokeWidth="6" strokeLinecap="round" />
+</svg>

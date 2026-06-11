@@ -287,6 +287,46 @@ export default function Laporan() {
                   </div>
                 </div>
 
+                {/* UTANG */}
+<div className="bg-white rounded-2xl p-4 shadow-sm print:border print:border-gray-200">
+  <p className="text-sm font-bold text-red-600 mb-3 print:text-black">🔴 UTANG WARUNG (Kewajiban)</p>
+  <div className="space-y-3">
+    <div className="flex justify-between items-center py-2">
+      <div className="flex items-center gap-3">
+        <div className="w-9 h-9 bg-red-100 rounded-xl flex items-center justify-center text-base print:bg-transparent">💳</div>
+        <div>
+          <p className="text-sm font-semibold text-gray-700 print:text-black">Utang Supplier</p>
+          <p className="text-xs text-gray-400 print:text-gray-600">Hutang pembelian barang</p>
+        </div>
+      </div>
+      <p className="text-sm font-bold text-red-600 print:text-black">Rp 0</p>
+    </div>
+    <div className="flex justify-between items-center bg-red-50 rounded-xl p-3 mt-2 print:bg-transparent print:border-t print:border-gray-300">
+      <p className="text-sm font-bold text-gray-700 print:text-black">Total Utang</p>
+      <p className="text-sm font-bold text-red-600 print:text-black">Rp 0</p>
+    </div>
+  </div>
+</div>
+
+{/* EKUITAS */}
+<div className="bg-white rounded-2xl p-4 shadow-sm print:border print:border-gray-200 border-2 border-yellow-200">
+  <p className="text-sm font-bold text-yellow-600 mb-3 print:text-black">💛 MODAL PEMILIK (Ekuitas)</p>
+  <div className="space-y-2">
+    <div className="flex justify-between items-center text-sm pb-2 border-b border-gray-100">
+      <p className="text-gray-600 print:text-black">Total Aset</p>
+      <p className="font-semibold print:text-black">Rp {totalAset.toLocaleString('id-ID')}</p>
+    </div>
+    <div className="flex justify-between items-center text-sm pb-2">
+      <p className="text-gray-600 print:text-black">Dikurangi Utang</p>
+      <p className="font-semibold print:text-black">- Rp 0</p>
+    </div>
+    <div className="flex justify-between items-center bg-yellow-50 rounded-xl p-3 mt-2 print:bg-transparent print:border-t print:border-gray-300">
+      <p className="text-sm font-bold text-gray-700 print:text-black">MODAL PEMILIK</p>
+      <p className="text-sm font-bold text-[#B8860B] print:text-black">Rp {totalAset.toLocaleString('id-ID')}</p>
+    </div>
+  </div>
+</div>
+
                 {/* Info Zakat */}
                 <div className="bg-yellow-50 rounded-2xl p-4 border border-yellow-200 print:border-gray-300">
                   <p className="text-xs font-semibold text-yellow-700 mb-1 print:text-black">🕌 Info Zakat Tijarah</p>
